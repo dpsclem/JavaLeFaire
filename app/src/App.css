@@ -39,8 +39,12 @@
 
 .cell {
   background-color: black;
-  width:40px;
-  height:40px;
+  width:100px;
+  height:100px;
   border: 2px solid white;
   margin:0;
+}
+
+table{
+  margin-bottom: 100px;
 }
