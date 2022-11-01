@@ -49,3 +49,8 @@ table{
   margin-bottom: 100px;
   margin-top: 100px;
 }
+
+.entities{
+  width:100px;
+  height:100px;
+}
