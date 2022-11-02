@@ -37,20 +37,56 @@
   }
 }
 
+.gameContainer{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 100vh;
+  width: 100vw;
+}
+
+.informationContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: 100vh;
+  width: 20%;
+}
+
+.energy{
+  display: inline-block;
+  height: 1.5vw;
+  width: 8vw;
+  border: 5px solid black;
+}
+
+.energyValue{
+  background-color: yellow;
+  height: 100%;
+}
+
+.energyLogo{
+  display: inline-block;
+  height: 2vw;
+  width: 2vw;
+}
+
 .cell {
   background-color: black;
-  width:100px;
-  height:100px;
+  width:8vh;
+  height:8vh;
   border: 2px solid white;
   margin:0;
 }
 
 table{
-  margin-bottom: 100px;
-  margin-top: 100px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .entities{
-  width:100px;
-  height:100px;
+  width:7vh;
+  height:7vh;
 }
