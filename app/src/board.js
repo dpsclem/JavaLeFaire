@@ -140,14 +140,8 @@ class BoardComponent extends React.Component{
             }
             this.state.character.energy -= 1;
             if (this.state.character.energy <= 0){
-                //const initialStates = this.getInitialStates();
-                //this.setState({'character' : initialStates.character});
-                //this.setState({'monsterT1' : initialStates.monsterT1});
-                //this.setState({'monsterT2' : initialStates.monsterT2});
-                //this.setState({'monsterT3' : initialStates.monsterT3});
-                //this.setState({'bonus' : initialStates.bonus});
-                //this.setState({'house' : initialStates.house});
                 this.setState(this.getInitialStates());
+                this.state.bonus.push({'x': 1, 'y': 1, 'bonusImage': images.bonus1});
                 console.log(this.state)
                 this.setRandomBonus();
             }
