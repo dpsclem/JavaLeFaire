@@ -23,6 +23,25 @@ class BoardComponent extends React.Component{
         };
     }
 
+    saveBoard(){
+        //Post status dictionary to API
+        let data = this.state;
+        fetch('http://localhost:8080/saveGameState', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
     componentWillMount() {
         this.moveCharacter = this.moveCharacter.bind(this);
     }
@@ -90,6 +109,32 @@ class BoardComponent extends React.Component{
         }
     }
 
+    getCellElementForPosition(x, y){
+        if((x === this.state.character.x) && (y === this.state.character.y)){
+            return 0;
+        }
+        else if((x === this.state.monsterT1.x) && (y === this.state.monsterT1.y)){
+            return 1;
+        }
+        else if((x === this.state.monsterT2.x) && (y === this.state.monsterT2.y)){
+            return 2;
+        }
+        else if((x === this.state.monsterT3.x) && (y === this.state.monsterT3.y)){
+            return 3;
+        }
+        else if(this.state.bonus.some(bonus => bonus.x === x && bonus.y === y)){
+            let currentBonus = this.state.bonus.find(bonus => bonus.x === x && bonus.y === y);
+            if (currentBonus.bonusImage === images.bonus1) { return 4; }
+            else if (currentBonus.bonusImage === images.bonus2) { return 5; }
+        }
+        else if((x === this.state.house.x) && (y === this.state.house.y)){
+            return 6;
+        }
+        else{
+            return -1;
+        }
+    }
+
     moveCharacter(event){
         console.log(event);
         let haveMoved = false;
@@ -125,6 +170,7 @@ class BoardComponent extends React.Component{
                 break;
         }
         if (haveMoved){
+            this.saveBoard();
             if (this.isMonsterCell(futurePositions.x, futurePositions.y)){
                 this.state.character.energy -= 10;
             }
