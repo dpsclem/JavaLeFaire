@@ -20,12 +20,19 @@ class BoardComponent extends React.Component{
             'monsterT3' : {'x' : this.getRandomCoordinate(), 'y' : this.getRandomCoordinate()},
             'bonus' : [],
             'house' : {'x' : 9, 'y' : 9},
+            'gameId' : 0,
+            'turnId' : 0
         };
     }
 
     saveBoard(){
         //Post status dictionary to API
-        let data = this.state;
+        let data = {
+            "gameId": this.state.gameId,
+            "turnId": this.state.turnId,
+            "states": JSON.stringify(this.state)
+        };
+        console.log(data);
         fetch('http://localhost:8080/saveGameState', {
             method: 'POST',
             headers: {
@@ -170,6 +177,7 @@ class BoardComponent extends React.Component{
                 break;
         }
         if (haveMoved){
+            this.state.turnId += 1;
             this.saveBoard();
             if (this.isMonsterCell(futurePositions.x, futurePositions.y)){
                 this.state.character.energy -= 10;

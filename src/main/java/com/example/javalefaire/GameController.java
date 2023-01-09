@@ -1,6 +1,6 @@
 package com.example.javalefaire;
 
-import com.example.javalefaire.model.Game;
+import com.example.javalefaire.entity.Game;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,8 +13,9 @@ public class GameController {
     }
 
     @PostMapping("/saveGameState")
-    public void saveGameState(@RequestBody String gameState) {
-        Game game = new Game(gameState);
-        System.out.println(gameState);
+    public void saveGameState(@RequestBody Game game) {
+        System.out.println(game.getTurnId());
+        System.out.println(game.getGameId());
+        System.out.println(game.getStates());
     }
 }

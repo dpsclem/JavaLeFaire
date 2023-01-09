@@ -1,4 +1,4 @@
-package com.example.javalefaire.model;
+package com.example.javalefaire.entity;
 
 public class Player {
     public int Energy;
