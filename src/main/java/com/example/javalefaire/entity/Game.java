@@ -1,24 +1,29 @@
 package com.example.javalefaire.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 @Entity
 public class Game {
 
-    private Long id;
+    @Id
+    @Column(name="id", unique=true, nullable=false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private int id;
 
-    public Long getTurnId() {
+    public int getTurnId() {
         return TurnId;
     }
 
-    public void setTurnId(Long turnId) {
+    public void setTurnId(int turnId) {
         TurnId = turnId;
     }
 
-    private Long TurnId;
-    private Long GameId;
+    private int TurnId;
+    private int GameId;
+
+    @Column(length = Integer.MAX_VALUE)
+    public String States;
 
     public String getStates() {
         return States;
@@ -28,22 +33,20 @@ public class Game {
         States = states;
     }
 
-    public String States;
 
-    public Long getGameId() {
+    public int getGameId() {
         return GameId;
     }
 
-    public void setGameId(Long gameId) {
+    public void setGameId(int gameId) {
         GameId = gameId;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    @Id
-    public Long getId() {
+    public int getId() {
         return id;
     }
 }
