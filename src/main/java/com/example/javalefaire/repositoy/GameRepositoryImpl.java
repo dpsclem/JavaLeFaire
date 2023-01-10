@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Component
 public class GameRepositoryImpl {
@@ -18,5 +19,13 @@ public class GameRepositoryImpl {
                 .setParameter("gameId", gameId)
                 .setMaxResults(1)
                 .getSingleResult();
+    }
+
+    public List<String> getGameIds() {
+        return entityManager.createQuery("SELECT g.GameId FROM Game g", String.class)
+                .getResultList()
+                .stream()
+                .distinct()
+                .toList();
     }
 }

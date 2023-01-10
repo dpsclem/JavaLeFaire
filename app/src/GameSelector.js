@@ -2,6 +2,11 @@ import React from "react";
 
 
 class GameSelectorComponent extends React.Component{
+    constructor(){
+        super();
+        var gameIds = this.fetchGameIds();
+    }
+
     render(){
         return (
             <div>
@@ -12,6 +17,9 @@ class GameSelectorComponent extends React.Component{
         )
     }
 
+    fetchGameIds() {
+        fetch('http://localhost:8080/gameIds')
+    }
 }
 
 export default GameSelectorComponent;

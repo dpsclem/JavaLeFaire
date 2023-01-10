@@ -5,6 +5,8 @@ import com.example.javalefaire.repositoy.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 public class GameController {
@@ -12,9 +14,9 @@ public class GameController {
     @Autowired
     private GameRepository gameRepository;
 
-    @GetMapping("/getGameId")
-    public String getGameId() {
-        return "15";
+    @GetMapping("/gameIds")
+    public List<String> getGameIds() {
+        return gameRepository.getGameIds();
     }
 
     @GetMapping("/getLastTurnForGame")
