@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { images } from "./entities"
 import { Informations } from "./informations";
+import {parse, stringify} from 'flatted';
 
 
 class BoardComponent extends React.Component{
@@ -10,6 +11,7 @@ class BoardComponent extends React.Component{
         super(props);
         this.state = this.getInitialStates();
         this.setRandomBonus();
+        this.saveBoard();
     }
 
     getInitialStates() {
@@ -20,18 +22,18 @@ class BoardComponent extends React.Component{
             'monsterT3' : {'x' : this.getRandomCoordinate(), 'y' : this.getRandomCoordinate()},
             'bonus' : [],
             'house' : {'x' : 9, 'y' : 9},
-            'gameId' : 0,
-            'turnId' : 0
+            'turnId' : 0,
         };
     }
 
     saveBoard(){
         //Post status dictionary to API
         let data = {
-            "gameId": this.state.gameId,
+            "gameId": this.props.gameId,
             "turnId": this.state.turnId,
             "states": JSON.stringify(this.state)
         };
+        console.log("Saving :");
         console.log(data);
         fetch('http://localhost:8080/saveGameState', {
             method: 'POST',
@@ -39,18 +41,49 @@ class BoardComponent extends React.Component{
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
-        })
-        .then(response => response.json())
+        });
+        /*.then(response => response.json())
         .then(data => {
             console.log('Success:', data);
         })
         .catch((error) => {
             console.error('Error:', error);
-        });
+        }); */
+    }
+
+    goBack() {
+        if (!('gobackLimit' in this.state) || this.state.turnId > this.state.gobackLimit) {
+            fetch('http://localhost:8080/goBack?gameId=' + this.props.gameId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    this.applySave(data.states);
+                })
+                .catch((error) => {
+                    alert("Can't go back anymore : " + error);
+                });
+        } else {
+            alert("You can only go back 5 times")
+        }
+
+    }
+
+    applySave(states){
+        states = JSON.parse(states);
+        delete states.gobackLimit;
+        this.setState(states);
+        console.log("Retrieved save, states are : ");
+        console.log(this.state);
     }
 
     componentWillMount() {
         this.moveCharacter = this.moveCharacter.bind(this);
+        this.goBack = this.goBack.bind(this);
     }
 
     componentDidMount() {
@@ -80,6 +113,9 @@ class BoardComponent extends React.Component{
                 <div className='gameContainer'>
                     <div className='informationContainer'>
                     <Informations energy={this.state.character.energy}/>
+                    <div className='gameButtonsContainer'>
+                        <button className="gameBtn" onClick={this.goBack}>Go back</button>
+                    </div>
                     </div>
                     <div className='boardContainer'>
                         <table>
@@ -143,13 +179,13 @@ class BoardComponent extends React.Component{
     }
 
     moveCharacter(event){
-        console.log(event);
+        //console.log(event);
         let haveMoved = false;
         const futurePositions = {
             'x' : this.state.character.x,
             'y' : this.state.character.y,
         };
-        console.log(this.state.character.x, this.state.character.y);
+        //console.log(this.state.character.x, this.state.character.y);
         switch(event.key){
             case "ArrowUp":
                 if (this.state.character.y > 0){
@@ -178,7 +214,6 @@ class BoardComponent extends React.Component{
         }
         if (haveMoved){
             this.state.turnId += 1;
-            this.saveBoard();
             if (this.isMonsterCell(futurePositions.x, futurePositions.y)){
                 this.state.character.energy -= 10;
             }
@@ -196,13 +231,20 @@ class BoardComponent extends React.Component{
             if (this.state.character.energy <= 0){
                 this.setState(this.getInitialStates());
                 this.state.bonus.push({'x': 1, 'y': 1, 'bonusImage': images.bonus1});
-                console.log(this.state)
                 this.setRandomBonus();
             }
             else {
                 this.setState({'character' : this.state.character});
                 this.moveMonsterRandomly();
             }
+            if (this.state.turnId >= 7){
+                if (this.state.gobackLimit && this.state.gobackLimit < this.state.turnId - 6){
+                    this.setState({'gobackLimit': this.state.turnId - 6});
+                } else {
+                    this.setState({'gobackLimit': this.state.turnId - 6});
+                }
+            }
+            this.saveBoard();
         }
     }
 
@@ -250,7 +292,7 @@ class BoardComponent extends React.Component{
                 }
                 break;
         }
-        console.log(this.state);
+        //console.log(this.state);
     }
 
     isEmptyCell(x, y) {
