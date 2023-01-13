@@ -11,8 +11,10 @@ class GameSelectorComponent extends React.Component{
         return (
             <div>
                 <h1>Game Selector</h1>
-                <input type="text" id="gameId" name="gameId" placeholder="Game Id"/>
-                <button type="button" onClick={this.props.updateGameIdHandler}>Join Game</button>
+                <div id="blocGameId">
+                    <input type="text" id="gameId" name="gameId" placeholder="Game Id"/>
+                    <button type="button" id="selectGameId" onClick={this.props.updateGameIdHandler}>&#10148;</button>
+                </div>
             </div>
         )
     }
